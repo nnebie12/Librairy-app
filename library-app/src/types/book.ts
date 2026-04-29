@@ -3,6 +3,7 @@ export interface Book {
   title: string;
   author: string;
   available: boolean;
+    status: "available" | "borrowed";
 }
 
 export type BookDictionary = Record<string, Book>;

@@ -5,45 +5,50 @@ import { BookList } from "./components/bookList/BookList";
 import type { Book, BookDictionary } from "./types/book";
 import { getAvailableBooks } from "./types/book";
 
+const initialBooks: BookDictionary = {
+  "1": { id: "1", title: "Le Petit Prince", author: "Antoine de Saint-Exupéry", available: true, status: "available" },
+  "2": { id: "2", title: "L'Étranger", author: "Albert Camus", available: false, status: "borrowed" },
+  "3": { id: "3", title: "Les Misérables", author: "Victor Hugo", available: true, status: "available" },
+  "4": { id: "4", title: "Germinal", author: "Émile Zola", available: true, status: "available" },
+};
 
 export default function App() {
-  // Exercice 5 — State pour stocker les livres (dictionnaire)
-  const [books, setBooks] = useState<BookDictionary>({});
+  const [books, setBooks] = useState<BookDictionary>(initialBooks);
   const [filter, setFilter] = useState<string>("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [showAvailableOnly, setShowAvailableOnly] = useState<boolean>(false);
 
   function addBook(title: string, author: string): void {
     const id = String(Date.now());
-    const newBook: Book = { id, title, author, available: true };
+    const newBook: Book = { id, title, author, available: true, status: "available" };
     setBooks((prev) => ({ ...prev, [id]: newBook }));
   }
 
-  const filteredBooks = useMemo(() => {
-    let list = Object.values(books);
-    if (filter.trim()) {
-      list = list.filter((book) =>
-        book.title.toLowerCase().includes(filter.toLowerCase()) ||
-        book.author.toLowerCase().includes(filter.toLowerCase())
-      );
-    }
-    if (showAvailableOnly) {
-      list = list.filter((book) => book.available);
-    }
-    return list;
-  }, [books, filter, showAvailableOnly]);
-
-  const selectedBook = selectedId ? books[selectedId] : null;
-
-  function toggleStatus(id: string) {
+  function toggleStatus(id: string): void {
     setBooks((prev) => ({
       ...prev,
       [id]: {
         ...prev[id],
+        status: prev[id].status === "available" ? "borrowed" : "available",
         available: !prev[id].available,
       },
     }));
   }
+
+  // Exercice 8 — Filtre par titre + filtre disponibles
+  const filteredBooks = useMemo<Book[]>(() => {
+    let list = Object.values(books);
+    if (showAvailableOnly) list = getAvailableBooks(books);
+    if (filter.trim()) {
+      list = list.filter((b) =>
+        b.title.toLowerCase().includes(filter.toLowerCase())
+      );
+    }
+    return list;
+  }, [books, filter, showAvailableOnly]);
+
+  // Exercice 8 — Livre sélectionné
+  const selectedBook: Book | null = selectedId ? books[selectedId] : null;
 
 
   return (
@@ -52,6 +57,25 @@ export default function App() {
       <p className={styles.stats}>
         {Object.keys(books).length} livres au total — {getAvailableBooks(books).length} disponibles
       </p>
+
+      <div className={styles.filterRow}>
+        <input
+          type="text"
+          placeholder="Filtrer par titre..."
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          className={styles.filterInput}
+        />
+        <button
+          onClick={() => setShowAvailableOnly((v) => !v)}
+          className={[
+            styles.filterBtn,
+            showAvailableOnly ? styles.filterBtnActive : ""
+          ].join(" ")}
+        >
+          {showAvailableOnly ? "✓ Disponibles" : "Disponibles"}
+        </button>
+      </div>
 
       <AddBookForm onAdd={addBook} />
 
@@ -62,21 +86,7 @@ export default function App() {
         ].join(" ")}
       >
         <div className={styles.leftCol}>
-          <input
-            type="text"
-            placeholder="Filtrer par titre ou auteur..."
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            style={{ padding: "8px 12px", borderRadius: 6, border: "1px solid #d1d5db", fontSize: 14 }}
-          />
-          <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14 }}>
-            <input
-              type="checkbox"
-              checked={showAvailableOnly}
-              onChange={() => setShowAvailableOnly((v) => !v)}
-            />
-            Afficher seulement les livres disponibles
-          </label>
+          {/* Le filtre et le bouton sont déjà au-dessus, on retire ce doublon */}
           <BookList
             books={filteredBooks}
             selectedId={selectedId}
@@ -85,7 +95,16 @@ export default function App() {
           />
         </div>
         {selectedBook && (
-          <div>
+          <div className={styles.detailCard}>
+            <div className={styles.detailCardHeader}>
+              <h2 style={{ margin: 0, fontSize: 16, fontWeight: 600 }}>Détails</h2>
+              <button
+                onClick={() => setSelectedId(null)}
+                className={styles.closeBtn}
+              >
+                ×
+              </button>
+            </div>
             <p className={styles.bookTitle}>{selectedBook.title}</p>
             <p className={styles.bookAuthor}>{selectedBook.author}</p>
             <div className={styles.bookDetails}>
@@ -106,7 +125,10 @@ export default function App() {
               </div>
             </div>
             <button
-              className={styles.toggleBtn}
+              className={[
+                styles.toggleBtn,
+                !selectedBook.available ? styles.toggleBtnBorrowed : ""
+              ].join(" ")}
               onClick={() => toggleStatus(selectedBook.id)}
             >
               {selectedBook.available ? "Marquer comme emprunté" : "Marquer comme disponible"}
