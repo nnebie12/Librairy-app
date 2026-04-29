@@ -1,0 +1,45 @@
+.bookItem {
+  border-radius: 8px;
+  padding: 12px 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  transition: border 0.2s, background 0.2s;
+}
+.selected {
+  border: 2px solid #3b82f6;
+  background-color: #eff6ff;
+}
+.unselected {
+  border: 1px solid #e5e7eb;
+  background-color: #fff;
+}
+.title {
+  margin: 0;
+  font-weight: 600;
+  font-size: 15px;
+}
+.author {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+.statusBtn {
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s;
+}
+.available {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+.borrowed {
+  background-color: #fef3c7;
+  color: #92400e;
+}
