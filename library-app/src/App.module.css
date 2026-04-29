@@ -1,0 +1,93 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  font-family: sans-serif;
+}
+
+.header {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.stats {
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+}
+
+.grid {
+  display: grid;
+  gap: 24px;
+}
+
+.gridTwo {
+  grid-template-columns: 1fr 1fr;
+}
+
+.gridOne {
+  grid-template-columns: 1fr;
+}
+
+.leftCol {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.bookTitle {
+  margin: 0 0 4px;
+  font-weight: 700;
+  font-size: 17px;
+}
+
+.bookAuthor {
+  margin: 0 0 16px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.bookDetails {
+  border-top: 1px solid #f3f4f6;
+  padding-top: 12px;
+  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+}
+
+.detailLabel {
+  color: #9ca3af;
+}
+
+.detailValue {
+  font-family: monospace;
+}
+
+.status {
+  font-weight: 500;
+}
+
+.statusAvailable {
+  color: #065f46;
+}
+
+.statusBorrowed {
+  color: #92400e;
+}
+
+.toggleBtn {
+  margin-top: 12px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  background: #f3f4f6;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+}
