@@ -1,0 +1,11 @@
+.empty {
+  text-align: center;
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
